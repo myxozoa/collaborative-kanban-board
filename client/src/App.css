@@ -1,0 +1,74 @@
+html, body, .App {
+  min-height: 100%;
+}
+
+.App {
+  display: flex;
+  text-align: center;
+  margin: 50px 0 0 0;
+  font-size: 15px;
+}
+
+.title {
+  padding: 0;
+  margin: 0;
+  position: relative;
+  z-index: 10;
+  vertical-align: middle;
+  line-height: 30px;
+  width: 100%;
+  color: white;
+  background: black;
+  height: 30px;
+  box-shadow: 0 2px 4px rgba(204, 204, 204, 0.5);
+}
+
+.card {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  padding: 0;
+  box-shadow: 0 2px 4px rgb(204, 204, 204, 0.5);
+}
+
+.card-mover {
+  color: grey;
+  font-size: 30px;
+  height: 100%;
+  width: 50px;
+  background: none;
+  border: 0;
+}
+
+.card-mover:hover {
+  background: #ebebeb;
+  cursor: pointer;
+}
+
+.columns {
+  flex: 1;
+  margin-right: 25px;
+}
+
+.columns:first-of-type {
+  margin-left: 25px;
+}
+
+.text {
+  flex-grow: 2;
+}
+
+.new-card {
+  padding: 20px;
+  font-weight:  550;
+  color: grey;
+  background: none;
+  border: 0;
+}
+
+.new-card:hover {
+  cursor: pointer;
+  color: #5f5f5f;
+}
