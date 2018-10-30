@@ -30,7 +30,6 @@ class Column extends React.Component {
       <Mutation mutation={ADD_ITEM}
       update={(cache, { data: { addItem } }) => {
         const { board } = cache.readQuery({ query: GET_BOARD });
-        console.log(board);
         board[this.props.number].items.push(addItem);
         cache.writeQuery({
           query: GET_BOARD,

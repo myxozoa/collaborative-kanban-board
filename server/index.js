@@ -28,7 +28,7 @@ const typeDefs = `
 
   type Mutation {
     addItem(col: ID!, text: String!): Item!,
-    moveItem(id: ID!, oldCol: ID!, newCol: ID!): Item!,
+    moveItem(id: ID!, oldCol: ID!, newCol: ID!): [Column]!,
     deleteItem(id: ID!, col: ID!): Item!,
   }
 
@@ -66,7 +66,7 @@ const resolvers = {
       board[newCol].items.push(item);
 
       pubsub.publish('Board', { board });
-      return item;
+      return board;
     },
     deleteItem: (_, { id, col }, { pubsub }) => {
       let item = {};
