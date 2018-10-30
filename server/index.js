@@ -1,6 +1,7 @@
 const { GraphQLServer } = require('graphql-yoga');
 
-const board = [{name: '', items: [{id: '1', name: 'test'}]},{items: [{id: '2', name: 'test'}]},{items: [{id: '3', name: 'test'}]}];
+let count = 3;
+const board = [{name: 'In', items: [{id: '1', name: 'test'}]},{name: '', items: [{id: '2', name: 'test'}]},{items: [{id: '3', name: 'test'}]}];
 
 const typeDefs = `
   type Query {
@@ -15,11 +16,12 @@ const typeDefs = `
   }
 
   type Item {
+    id: ID!,
     name: String!
   }
 
   type Mutation {
-    addItem(id: ID!, col: ID!): Item!,
+    addItem(col: ID!, name: String!): Item!,
     moveItem(id: ID!, oldCol: ID!, newCol: ID!): Item!,
     deleteItem(id: ID!, col: ID!): Item!
   }
@@ -32,8 +34,24 @@ const resolvers = {
     item: (_, { id, col }) => board[col].items.find((items) => items.id === id),
   },
   Mutation: {
-    addItem: (_, { id, oldCol, newCol }) => {},
-    moveItem: (_, { id, oldCol, newCol }) => {},
+    addItem: (_, { col, name }) => {
+      const newItem = { id: ++count, name };
+      board[col].items.push(newItem);
+
+      return newItem;
+    },
+    moveItem: (_, { id, oldCol, newCol }) => {
+      let item = {};
+      board[oldCol].items = board[oldCol].items.filter((items) => {
+        if(items.id === id) {
+          item = items;
+          return false;
+        }
+        return true;
+      });
+      board[newCol].items.push(item);
+      return item;
+    },
     deleteItem: (_, { id, col }) => {},
   }
 }
