@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import gql from 'graphql-tag';
-import { Query, Subscription } from 'react-apollo';
+import { Query } from 'react-apollo';
 
 import Page from './components/Page';
 import './App.css';
@@ -41,7 +41,19 @@ class App extends Component {
           if (error) return `Error: ${error.message}`;
 
           return (
-            <Page board={data.board}/>
+            <Page board={data.board} subscribeToBoardChanges={() =>
+              (subscribeToMore({
+                document: BOARD_SUB,
+                updateQuery: (prev, { subscriptionData }) => {
+                  if (!subscriptionData.data) return prev;
+                  console.log(prev);
+
+                  console.log(subscriptionData);
+                  console.log(subscriptionData);
+
+                  return { data: { board: [...prev.board, subscriptionData ]}};
+                }
+              }))}/>
           );
         }}
         </Query>

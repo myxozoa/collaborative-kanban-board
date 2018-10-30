@@ -1,5 +1,4 @@
 import React from 'react';
-import shortid from 'shortid';
 import PropTypes from 'prop-types';
 import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';

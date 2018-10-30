@@ -2,8 +2,12 @@ import React from 'react';
 
 import Column from './Column';
 
-
 class Page extends React.Component {
+
+  componentDidMount() {
+    this.props.subscribeToBoardChanges();
+  }
+
   render() {
     return (
       <React.Fragment>
