@@ -1,16 +1,22 @@
 const { GraphQLServer, PubSub } = require('graphql-yoga');
 
 let itemCount = 3;
-const board = [{name: 'In', items: [{id: '1', name: 'test'}]},{name: '', items: [{id: '2', name: 'test'}]},{items: [{id: '3', name: 'test'}]}];
+const board = [
+  { id: 'col1', name: 'In', items: [{ id: '1', name: 'test' }] },
+  { id: 'col2', name: '', items: [{ id: '2', name: 'test' }] },
+  { id: 'col3', name: '', items: [{ id: '3', name: 'test' }] },
+];
 
 const typeDefs = `
   type Query {
     info: String!,
     board: [Column]!,
+    column(id: ID!, col: ID!): Column!,
     item(id: ID!, col: ID!): Item,
   }
 
   type Column {
+    id: ID!,
     name: String!
     items: [Item]!
   }
@@ -36,7 +42,8 @@ const resolvers = {
   Query: {
     info: () => 'This is the collaborative Kanban Board',
     board: () => board,
-    item: (_, { id, col }) => board[col].items.find((items) => items.id === id),
+    column: (_, { id, col }) => board[col],
+    item: (_, { id, col }) => board[col].items.find(items => items.id === id),
   },
   Mutation: {
     addItem: (_, { col, name }, { pubsub }) => {
@@ -49,8 +56,8 @@ const resolvers = {
     },
     moveItem: (_, { id, oldCol, newCol }, { pubsub }) => {
       let item = {};
-      board[oldCol].items = board[oldCol].items.filter((items) => {
-        if(items.id === id) {
+      board[oldCol].items = board[oldCol].items.filter(items => {
+        if (items.id === id) {
           item = items;
           return false;
         }
@@ -63,8 +70,8 @@ const resolvers = {
     },
     deleteItem: (_, { id, col }, { pubsub }) => {
       let item = {};
-      board[col].items = board[col].items.filter((items) => {
-        if(items.id === id) {
+      board[col].items = board[col].items.filter(items => {
+        if (items.id === id) {
           item = items;
           return false;
         }
@@ -78,15 +85,15 @@ const resolvers = {
   Subscription: {
     board: {
       subscribe: (parent, args, { pubsub }) => pubsub.asyncIterator('Board'),
-    }
-  }
-}
+    },
+  },
+};
 
 const pubsub = new PubSub();
 const server = new GraphQLServer({
   typeDefs,
   resolvers,
-  context: { pubsub }
+  context: { pubsub },
 });
 
-server.start({ subscriptions: { keepAlive: true }, playground: '/playground'}, () => console.log('server is running on http://localhost:4000'));
+server.start({ subscriptions: { keepAlive: true }, playground: '/playground' }, () => console.log('server is running on http://localhost:4000'));
