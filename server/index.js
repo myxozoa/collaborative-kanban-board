@@ -2,9 +2,9 @@ const { GraphQLServer, PubSub } = require('graphql-yoga');
 
 let itemCount = 3;
 const board = [
-  { id: 'col1', name: 'In', items: [{ id: '1', name: 'test' }] },
-  { id: 'col2', name: '', items: [{ id: '2', name: 'test' }] },
-  { id: 'col3', name: '', items: [{ id: '3', name: 'test' }] },
+  { id: 'col1', name: 'In', items: [{ id: '1', text: 'test' }] },
+  { id: 'col2', name: '', items: [{ id: '2', text: 'test' }] },
+  { id: 'col3', name: '', items: [{ id: '3', text: 'test' }] },
 ];
 
 const typeDefs = `
@@ -23,11 +23,11 @@ const typeDefs = `
 
   type Item {
     id: ID!,
-    name: String!
+    text: String!
   }
 
   type Mutation {
-    addItem(col: ID!, name: String!): Item!,
+    addItem(col: ID!, text: String!): Item!,
     moveItem(id: ID!, oldCol: ID!, newCol: ID!): Item!,
     deleteItem(id: ID!, col: ID!): Item!,
   }
@@ -46,8 +46,8 @@ const resolvers = {
     item: (_, { id, col }) => board[col].items.find(items => items.id === id),
   },
   Mutation: {
-    addItem: (_, { col, name }, { pubsub }) => {
-      const newItem = { id: ++itemCount, name };
+    addItem: (_, { col, text }, { pubsub }) => {
+      const newItem = { id: ++itemCount, text };
       board[col].items.push(newItem);
 
       console.log(board);

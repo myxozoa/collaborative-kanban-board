@@ -17,9 +17,9 @@ class Column extends React.Component {
   }
 
   componentDidMount() {
-    for(let i = 0; i < 2; i++) {
-      this.generateCard(false);
-    }
+    // for(let i = 0; i < 2; i++) {
+    //   this.generateCard(false);
+    // }
   }
 
   render() {
@@ -27,7 +27,7 @@ class Column extends React.Component {
       <div className="columns">
         <header className="title" style={{background: this.props.color}}>{this.props.title}</header>
         {this.props.cards.map((el, index) => {
-          return <Card {...el} column={this.props.id} key={index}/>;
+          return <Card {...el} end={this.props.end} column={this.props.number} key={index}/>;
         })}
         <button className='new-card' onClick={this.generateCard}>+Add New Card</button>
       </div>

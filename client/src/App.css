@@ -72,3 +72,8 @@ html, body, .App {
   cursor: pointer;
   color: #5f5f5f;
 }
+
+.hide {
+  visibility: hidden;
+  pointer-events: none;
+}
