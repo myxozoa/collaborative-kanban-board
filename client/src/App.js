@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import gql from 'graphql-tag';
-import { Query } from 'react-apollo';
+import { Query, Subscription } from 'react-apollo';
 import Column from './components/Column.js';
 import './App.css';
 
@@ -17,57 +17,20 @@ export const GET_BOARD = gql`
   }
 `;
 
+// const BOARD_SUB = gql`
+//   subscription {
+//     board {
+//       id,
+//       name,
+//       items {
+//         id,
+//         text,
+//       }
+//     }
+//   }
+// `;
+
 class App extends Component {
-  moveCard = (id, direction) => {
-    this.setState((prev) => {
-      const newState = prev.columns.slice();
-      let cardToMove = null;
-      let index = null;
-      let cardNumber = null;
-
-
-      for(let i = 0; i < newState.length; i++) {
-        for(let m = 0; m < newState[i].length; m++) {
-          if(newState[i][m].id === id) {
-            index = i;
-            cardNumber = m;
-          }
-        }
-      }
-
-      cardToMove = newState[index].splice(cardNumber, 1)[0];
-
-      let destination = index;
-
-      if(direction === 'left') {
-        destination = --destination >= 0 ? destination : 0;
-      } else if (direction === 'right') {
-        destination = ++destination <= this.state.columns.length - 1 ? destination : this.state.columns.length - 1;
-      }
-
-      newState[destination].push(cardToMove);
-      return {columns: newState};
-    });
-  }
-
-  state = {
-    columns: [
-      [],
-      [],
-      [],
-      [],
-    ],
-  }
-
-  addNewCard = (column, card) => {
-    this.setState((prev) => {
-      const newState = prev.columns.slice();
-      newState[column].push(card);
-      return { columns: newState };
-    });
-  }
-
-
   render() {
     return (
       <div className="App">
