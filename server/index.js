@@ -2,9 +2,9 @@ const { GraphQLServer, PubSub } = require('graphql-yoga');
 
 let itemCount = 3;
 const board = [
-  { id: 'col1', name: 'Backlog', items: [{ id: '1', text: 'test' }] },
-  { id: 'col2', name: 'In Progress', items: [{ id: '2', text: 'test' }] },
-  { id: 'col3', name: 'Done', items: [{ id: '3', text: 'test' }] },
+  { id: 'col1', name: 'Backlog', items: [{ id: '1', text: 'you can use this' }] },
+  { id: 'col2', name: 'In Progress', items: [{ id: '2', text: 'in real time' }] },
+  { id: 'col3', name: 'Done', items: [{ id: '3', text: 'with other ppl' }] },
 ];
 
 const typeDefs = `
