@@ -50,26 +50,20 @@ const resolvers = {
       const newItem = { id: (++itemCount).toString(), text };
       board[col].items.push(newItem);
 
-      console.log(board);
       pubsub.publish('Board', { board });
       return newItem;
     },
     moveItem: (_, { id, oldCol, newCol }, { pubsub }) => {
       let item = {};
-      console.log('-------')
-      console.log(id, oldCol, newCol);
-      console.log(board[oldCol].items);
-      console.log('-------')
+
       board[oldCol].items = board[oldCol].items.filter(items => {
         if (items.id === id) {
-          console.log('matched');
           item = items;
           return false;
         }
         return true;
       });
       board[newCol].items.push(item);
-      console.log(board[oldCol].items);
       pubsub.publish('Board', { board });
       return board;
     },
