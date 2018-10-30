@@ -1,13 +1,21 @@
 const { GraphQLServer } = require('graphql-yoga');
 
-let count = 3;
+let itemCount = 3;
+let mouseCount = 0;
 const board = [{name: 'In', items: [{id: '1', name: 'test'}]},{name: '', items: [{id: '2', name: 'test'}]},{items: [{id: '3', name: 'test'}]}];
+const mousePositions = [];
 
 const typeDefs = `
   type Query {
     info: String!,
     board: [Column]!,
-    item(id: ID!, col: ID!): Item
+    item(id: ID!, col: ID!): Item,
+    mousePositions: [Mouse]!,
+  }
+
+  type Mouse {
+    x: Float!,
+    y: Float!,
   }
 
   type Column {
@@ -32,10 +40,11 @@ const resolvers = {
     info: () => 'This is the collaborative Kanban Board',
     board: () => board,
     item: (_, { id, col }) => board[col].items.find((items) => items.id === id),
+    mousePositions: () => mousePositions,
   },
   Mutation: {
     addItem: (_, { col, name }) => {
-      const newItem = { id: ++count, name };
+      const newItem = { id: ++itemCount, name };
       board[col].items.push(newItem);
 
       return newItem;
