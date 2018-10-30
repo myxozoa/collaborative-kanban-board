@@ -4,7 +4,7 @@ import { Query } from 'react-apollo';
 import Column from './components/Column.js';
 import './App.css';
 
-const GET_BOARD = gql`
+export const GET_BOARD = gql`
   {
     board {
       id,
