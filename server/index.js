@@ -1,4 +1,4 @@
-const { GraphQLServer } = require('graphql-yoga');
+const { GraphQLServer, PubSub } = require('graphql-yoga');
 
 let itemCount = 3;
 let mouseCount = 0;
@@ -14,6 +14,7 @@ const typeDefs = `
   }
 
   type Mouse {
+    name: String,
     x: Float!,
     y: Float!,
   }
@@ -31,7 +32,13 @@ const typeDefs = `
   type Mutation {
     addItem(col: ID!, name: String!): Item!,
     moveItem(id: ID!, oldCol: ID!, newCol: ID!): Item!,
-    deleteItem(id: ID!, col: ID!): Item!
+    deleteItem(id: ID!, col: ID!): Item!,
+    addMouse(name: String): Mouse!,
+    moveMouse(id: ID!, x: Float!, y: Float!): Mouse!,
+  }
+
+  type Subscription {
+    mousePositions: [Mouse]!
   }
 `;
 
@@ -47,6 +54,7 @@ const resolvers = {
       const newItem = { id: ++itemCount, name };
       board[col].items.push(newItem);
 
+      console.log(board);
       return newItem;
     },
     moveItem: (_, { id, oldCol, newCol }) => {
@@ -62,12 +70,34 @@ const resolvers = {
       return item;
     },
     deleteItem: (_, { id, col }) => {},
+    addMouse: (_, { name }, { pubsub }) => {
+      mousePositions[mouseCount++] = { name, x: 0, y: 0 };
+      console.log(mousePositions);
+
+      pubsub.publish('Mouse', { mousePositions });
+      return mousePositions[mouseCount - 1];
+    },
+    moveMouse: (_, { id, x, y }, { pubsub }) => {
+      mousePositions[id].x = x;
+      mousePositions[id].y = y;
+      console.log(mousePositions);
+
+      pubsub.publish('Mouse', { mousePositions });
+      return mousePositions[id];
+    },
+  },
+  Subscription: {
+    mousePositions: {
+      subscribe: (parent, args, { pubsub }) => pubsub.asyncIterator('Mouse'),
+    }
   }
 }
 
+const pubsub = new PubSub();
 const server = new GraphQLServer({
   typeDefs,
-  resolvers
+  resolvers,
+  context: { pubsub }
 });
 
 server.start(() => console.log('server is running on http://localhost:4000'));
